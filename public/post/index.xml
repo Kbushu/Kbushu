@@ -6,10 +6,23 @@
     <description>Recent content in Posts on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Dec 2016 21:49:57 -0700</lastBuildDate>
+    <lastBuildDate>Sun, 03 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ILS Sample</title>
+      <link>/2020/05/03/ils-sample/</link>
+      <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/05/03/ils-sample/</guid>
+      <description>This is a sampleThe current…..
+ProblemHow R helped to solve this problem
+Where can we use this
+Sample code and illustration of application of this approach.
+</description>
+    </item>
     
     <item>
       <title>A Plain Markdown Post</title>

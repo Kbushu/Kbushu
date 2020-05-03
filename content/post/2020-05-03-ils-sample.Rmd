@@ -1,0 +1,23 @@
+---
+title: ILS Sample
+author: JPH
+date: '2020-05-03'
+slug: ils-sample
+draft: TRUE
+categories: []
+tags:
+  - '#datascience'
+---
+
+# This is a sample
+
+The current.....
+
+## Problem
+
+How R helped to solve this problem
+
+Where can we use this 
+
+Sample code and illustration of application of this approach.
+
