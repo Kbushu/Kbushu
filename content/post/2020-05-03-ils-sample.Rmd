@@ -4,8 +4,8 @@ author: JPH
 date: '2020-05-03'
 slug: ils-sample
 draft: TRUE
-categories: []
-tags:
+categories: [ils]
+tags:["Skills", "Personnel"]
   - '#datascience'
 ---
 
@@ -15,9 +15,22 @@ The current.....
 
 ## Problem
 
+How can we know which tasks to transfer (see some lessons in skill transfer from informs conference)
+
 How R helped to solve this problem
 
 Where can we use this 
 
 Sample code and illustration of application of this approach.
+
+## Clustering
+
+We are using clustering k-means --- explain how it works
+
+
+
+## Case Study
+
+Link to a shiny app where user can change the number of support levels (cluster)
+Generate example data that use skills etc for maintenance tasks
 
