@@ -1,7 +1,59 @@
-# Create Tasks list
+---
+title: Skills Transfer
+author: Kobus Huisamen
+draft: TRUE
+date: '2020-06-08'
+slug: skills-transfer
+categories:
+  - skills
+  - clusterering
+tags:
+  - ILS
+---
+
+# This is a sample
+
+The current.....
+
+## Problem
+
+How can we know which tasks to transfer (see some lessons in skill transfer from informs conference)
+
+How R helped to solve this problem
+
+Where can we use this 
+
+Sample code and illustration of application of this approach.
+
+## Clustering
+
+We are using clustering k-means --- explain how it works
+
+
+
+## Case Study
+
+Link to a shiny app where user can change the number of support levels (cluster)
+Generate example data that use skills etc for maintenance tasks
+
+
+# Create Sample Data
+
+For this we will create a list of tasks and then link all the resources we need for the task.
+
+  * Parts
+  * Tools
+  * Skills
+
+Depth of maintenance range from A - D
+We will pre-assign skills to depth of maintenance, that way we know some skills are normally associated with a specific task complexity.
+
+You cannot give somebody tools and expect them to know what to do with it, but have to teach to transfer skills. Sometimes it takes time to build up the experience.
+
+```{r}
 tasks <- 100
 task_list <- data.frame(task = paste("Task", seq.int(1,to = tasks,  by = 1)),
-                        task_depth = sample(x = c('A','B','C','D'), size = 100, replace = TRUE))
+                        task_depth = sample(x = c('A','B','C','D'), size = tasks, replace = TRUE))
 
 # Create Resource list
 parts <- 50
@@ -12,10 +64,10 @@ tools_list <-  paste0("Tool-", seq.int(1,to = tools,  by = 1))
 
 skills <- 10
 skills_list <-  paste0("Skill-", seq.int(1,to = skills,  by = 1))
-
+skills_level <- sample(x = c('A','B','C','D'), size = skills, replace = TRUE)
 
 #  Link Tasks and Resources
-#TODO link in way to give some resources more wieght towards some depths
+#TODO link in way to give some resources more weight towards some depths
 
 task_resources <- NULL
 set.seed(31052020)
@@ -46,13 +98,16 @@ for (task in task_list$task) {
   
 }
 
-# So now we have tasks and resources linked
+#TODO: Show some sample with table
+```
 
-# to make heat map
-# make a matrix of tasks vs the resource
+So now we have tasks and resources linked
 
+to make heat map make a matrix of tasks vs the resource
+
+```{r}
 mm <- model.matrix(task ~., data = task_resources)[,-1]
-heatmap(mm)
+# heatmap(mm)
 library(dplyr)
 mm.grp <-  as.data.frame(mm) %>%
   # cbind(meid = df$meid)%>%
@@ -63,8 +118,12 @@ set.seed(1234)
 kmeansObj <- kmeans(mm.grp[,-1], 3)
 # add cluster
 mk <- cbind(mm.grp, cluster = kmeansObj$cluster, depth = task_list$task_depth)
-table(mk$cluster, mk$depth)
+# table(mk$cluster, mk$depth)
 heatmap(table(mk$cluster, mk$depth))
-heatmap(as.matrix(mk[,-1]))
+# heatmap(as.matrix(mk[,-1]))
+
+
+```
+
 
 
