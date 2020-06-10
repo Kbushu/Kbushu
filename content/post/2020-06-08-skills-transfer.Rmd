@@ -51,6 +51,7 @@ We will pre-assign skills to depth of maintenance, that way we know some skills 
 You cannot give somebody tools and expect them to know what to do with it, but have to teach to transfer skills. Sometimes it takes time to build up the experience.
 
 ```{r}
+#Generate a task list with random complexity depth
 tasks <- 100
 task_list <- data.frame(task = paste("Task", seq.int(1,to = tasks,  by = 1)),
                         task_depth = sample(x = c('A','B','C','D'), size = tasks, replace = TRUE))
@@ -67,12 +68,14 @@ skills_list <-  paste0("Skill-", seq.int(1,to = skills,  by = 1))
 skills_level <- sample(x = c('A','B','C','D'), size = skills, replace = TRUE)
 
 #  Link Tasks and Resources
-#TODO link in way to give some resources more weight towards some depths
+
 
 task_resources <- NULL
 set.seed(31052020)
 for (task in task_list$task) {
   
+  #id task complexity
+  depth <- task_list[task_list$task==task,'task_depth'] 
   # pick items
   pick_list <- data.frame(task = task, 
                           resource = unique(sample(x = parts_list, size = sample(1:10,1), replace = TRUE)),
@@ -90,7 +93,7 @@ for (task in task_list$task) {
   
   # pick skills
   pick_list <- data.frame(task = task, 
-                          resource = unique(sample(x = skills_list, size = sample(1:5,3), replace = TRUE)),
+                          resource = unique(sample(x = skills_list[skills_level==depth], size = sample(1:5,3), replace = TRUE)),
                           resource_type = 'skill')
   
   # add pick list to the data
@@ -124,6 +127,25 @@ heatmap(table(mk$cluster, mk$depth))
 
 
 ```
+What we see in heatmap.  Depth A is mainly cluster 1, Depth C has heavy presence in cluster 1 and 2. Depth D is mainly cluster 3. Depth B is almost equally distributed in cluster 2 and 3. 
+
+We can see that there is an opportunity at depth B to transfer skills capability between levels 2 and three. We can identify the tasks for this opportunity. (Skill 3 is common, which mean parts and tools migh be different.)
+```{r}
+# Task 16
+task_resources[task_resources$task %in% c("Task 16", "Task 17"),]
+```
 
 
 
+Add cluster id to task list
+
+```{r}
+task_list$cluster <-  kmeansObj$cluster
+```
+
+__Why is that we see some tasks have different complexity but in the same cluster?__
+Sample two tasks from same cluster, but different complexity and view difference in resources.
+
+```{r}
+# Use kmeansObj$centers to show distance betwwen 
+```
