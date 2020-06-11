@@ -108,17 +108,28 @@ So now we have tasks and resources linked
 
 to make heat map make a matrix of tasks vs the resource
 
+
 ```{r}
 mm <- model.matrix(task ~., data = task_resources)[,-1]
 # heatmap(mm)
+
+#TODO Explain this:
 library(dplyr)
 mm.grp <-  as.data.frame(mm) %>%
   # cbind(meid = df$meid)%>%
   group_by(task_resources$task) %>%
   summarise_all(sum)
+#beacause we sum the total res qty we will need to scale the data
+mm.grp.scaled <- scale(mm.grp[,-1])
+```
+
+The number of clusters we need relates to the number of support levels we have. In typical support environment we will find the basic tasks such as cleaning, checking and minor adjustments are done at the operational level by operators or maintainers. Minor repairs are done at the workshop by technical personnel. In some instances there is another two levels to cater for specialized diagnostics and upgrades or modifications that are done by specialised engineers. In this example let's say we have three levels.
+```{r}
 #Cluster and dimension reduction
 set.seed(1234)
-kmeansObj <- kmeans(mm.grp[,-1], 3)
+# kmeansObj <- kmeans(mm.grp[,-1], 10)
+kmeansObj <- kmeans(mm.grp.scaled, 3)
+
 # add cluster
 mk <- cbind(mm.grp, cluster = kmeansObj$cluster, depth = task_list$task_depth)
 # table(mk$cluster, mk$depth)
@@ -127,9 +138,19 @@ heatmap(table(mk$cluster, mk$depth))
 
 
 ```
+
+Data is standardised before principal component analysis.
+```{r}
+factoextra::fviz_cluster(object = kmeansObj, data = mm.grp[,-1], ellipse.type = "norm", stand = TRUE)
+```
+
+
+
 What we see in heatmap.  Depth A is mainly cluster 1, Depth C has heavy presence in cluster 1 and 2. Depth D is mainly cluster 3. Depth B is almost equally distributed in cluster 2 and 3. 
 
 We can see that there is an opportunity at depth B to transfer skills capability between levels 2 and three. We can identify the tasks for this opportunity. (Skill 3 is common, which mean parts and tools migh be different.)
+
+
 ```{r}
 # Task 16
 task_resources[task_resources$task %in% c("Task 16", "Task 17"),]
