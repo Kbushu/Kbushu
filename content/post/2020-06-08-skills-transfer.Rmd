@@ -15,9 +15,20 @@ tags:
 
 The current.....
 
+
+## Background
+
+Technical skills are at the cold face to sustain operations. Most support organisations face a shortage of some skills some time.  Some organisation cannot afford multiple levels of support.  When facing these situations the approach is to reduce the support levels and transferring skills to in-house capabilities. The purpose behind this can be to reduce costs and risks.
+
 ## Problem
 
-How can we know which tasks to transfer (see some lessons in skill transfer from informs conference)
+How can we identify where to start, which tasks should we train the maintainer on.
+to focus on when we can transfer (see some lessons in skill transfer from informs conference)
+
+## Approach
+
+Group tasks based on the similarity of resources. Resources can be anything you need to do the task, for example the screw driver, multimeter, spanners, the spares and the skills.  
+
 
 How R helped to solve this problem
 
@@ -45,8 +56,16 @@ For this we will create a list of tasks and then link all the resources we need 
   * Tools
   * Skills
 
-Depth of maintenance range from A - D
+Depth of maintenance range from A - D. 
 We will pre-assign skills to depth of maintenance, that way we know some skills are normally associated with a specific task complexity.
+
+Lets assume the current maintenance policy is based on a three level support structure
+
+  * LOR-1 Organisation A, B
+  * LOR-2 Intermediate C
+  * LOR-3 OEM D
+
+*We experiencing a shortage of skills at LOR-2 and want to know which of the depth C maintenance tasks can we transfer to LOR1.*
 
 You cannot give somebody tools and expect them to know what to do with it, but have to teach to transfer skills. Sometimes it takes time to build up the experience.
 
@@ -104,9 +123,7 @@ for (task in task_list$task) {
 #TODO: Show some sample with table
 ```
 
-So now we have tasks and resources linked
-
-to make heat map make a matrix of tasks vs the resource
+So now we have tasks and resources linked.
 
 
 ```{r}
@@ -115,35 +132,149 @@ mm <- model.matrix(task ~., data = task_resources)[,-1]
 
 #TODO Explain this:
 library(dplyr)
-mm.grp <-  as.data.frame(mm) %>%
-  # cbind(meid = df$meid)%>%
-  group_by(task_resources$task) %>%
+mm.grp <-  mm %>% 
+  as.data.frame() %>%
+  mutate(task = task_resources$task) %>%
+  group_by(task) %>%
   summarise_all(sum)
-#beacause we sum the total res qty we will need to scale the data
-mm.grp.scaled <- scale(mm.grp[,-1])
+#because we sum the total res qty we will need to scale the data for the heatmap
+mm.grp.scaled <- scale(mm.grp[,!(colnames(mm.grp)=='task')])
 ```
 
-The number of clusters we need relates to the number of support levels we have. In typical support environment we will find the basic tasks such as cleaning, checking and minor adjustments are done at the operational level by operators or maintainers. Minor repairs are done at the workshop by technical personnel. In some instances there is another two levels to cater for specialized diagnostics and upgrades or modifications that are done by specialised engineers. In this example let's say we have three levels.
+The number of clusters we need relates to the number of support levels we want. In typical support environments we will find the basic tasks such as cleaning, checking and minor adjustments are done at the operational level by operators or maintainers. Minor repairs are done at the workshop by more experienced technical personnel. In some instances there is another two levels to cater for specialized diagnostics and upgrades or modifications.  The latter normally done by specialised engineers. In this example let's say we have three levels.
+
+## Identifying the tasks
+
+Back to our problem. 
+*We experiencing a shortage of skills at LOR-2 and want to know which of the depth C maintenance tasks can we transfer to LOR1.* 
+Rephrase the problem in terms of the cluster analysis we can say. 
+Which depth C tasks appear in cluster 1
+
 ```{r}
 #Cluster and dimension reduction
-set.seed(1234)
+set.seed(12356)
 # kmeansObj <- kmeans(mm.grp[,-1], 10)
 kmeansObj <- kmeans(mm.grp.scaled, 3)
 
-# add cluster
+# add cluster to task list
 mk <- cbind(mm.grp, cluster = kmeansObj$cluster, depth = task_list$task_depth)
-# table(mk$cluster, mk$depth)
-heatmap(table(mk$cluster, mk$depth))
-# heatmap(as.matrix(mk[,-1]))
 
 
-```
-
-Data is standardised before principal component analysis.
-```{r}
+# Data is standardised before principal component analysis with stand=TRUE
 factoextra::fviz_cluster(object = kmeansObj, data = mm.grp[,-1], ellipse.type = "norm", stand = TRUE)
 ```
 
+Cluster and task complexity
+```{r}
+# table(mk$cluster, mk$depth)
+heatmap(table(mk$cluster, mk$depth))
+# heatmap(as.matrix(mk[,-1]))
+# heatmap(table(mk$cluster, mk$`task_resources$task`))
+
+# heatmap(mm[,-1])
+```
+
+## Levels Of Repair
+We are looking for tasks that 
+Look from the cluster perspective as that represents our repair levels in which we want to find commonality.
+
+```{r}
+# plot cluster and depth
+# plot the depth with fraction of cluster
+
+library(ggplot2)
+ggplot(mk) +
+ aes(x = cluster, fill = depth) +
+ geom_bar() +
+ scale_fill_hue() +
+ theme_minimal()
+```
+Let's look at the cluster range of the tasks from a depth perspective.
+```{r}
+table(mk[,c("cluster","depth")])
+```
+
+
+Let's look at the tasks that are at the same complexity but appear to be similar in resources.
+```{r}
+# find the most significant overlap = commonality
+# t1 <- table(mk[,c("cluster","depth")])
+
+library(dplyr)
+t1 <- mk %>% 
+  select(cluster, depth) %>% 
+  group_by(cluster) %>% 
+  summarise(cluster_range = length(unique(depth)))
+
+slct_complex <- t1$cluster[t1$cluster_range==max(t1$cluster_range)]
+# Find which complexity is the most significant at this level, once
+skilled_for <-  names(which.max(table(mk[,c("cluster","depth")])[slct_complex,]))
+
+# What other tasks can we do at this level
+cat("Cluster", slct_complex, "have the widest range of task complexity,", "and is mainly skilled for maintenance at depth", skilled_for)
+```
+
+Select the tasks with complexity 
+```{r}
+slct_tasks <- mk[mk$cluster==slct_complex,"task"]
+task_resources[task_resources$task %in% slct_tasks,]
+
+# create normalised list of tsks, resources, cluster and depth
+d <- cbind(task_list,cluster = kmeansObj$cluster) %>% 
+  left_join(task_resources) 
+```
+
+
+```{r}
+# select tasks for selected cluster
+d_slct <- d %>% 
+  filter(task %in% slct_tasks) %>% 
+  filter(resource_type == "skill") %>% 
+  mutate(task = paste0(task," (", task_depth, ")")) %>% 
+  droplevels()
+
+# make matrix of this list for heatmap
+heatmap(table(d_slct$task_depth, d_slct$resource))
+# factoextra::fviz_ca()
+# table the resources and focus on skills but show what tools needed to, what makes them close
+```
+As expected we see skills are closely related to the complexity of the task. But, remeber these tasks are clustered together, therefore there must be some other comonality. Let's look at the parts and tools. 
+<!-- Deeper dive into the tasks and the resources that make them family.  -->
+Which parts are common
+```{r}
+# select tasks for selected cluster
+d_slct <- d %>% 
+  filter(task %in% slct_tasks) %>% 
+  filter(resource_type == "part") %>% 
+  mutate(task = paste0(task," (", task_depth, ")")) %>% 
+  droplevels()
+
+# make matrix of this list for heatmap
+heatmap(table(d_slct$task_depth, d_slct$resource))
+```
+Which tools
+```{r}
+# select tasks for selected cluster
+d_slct <- d %>% 
+  filter(task %in% slct_tasks) %>% 
+  filter(resource_type == "tool") %>% 
+  mutate(task = paste0(task," (", task_depth, ")")) %>% 
+  droplevels()
+
+# make matrix of this list for heatmap
+heatmap(table(d_slct$task_depth, d_slct$resource))
+```
+
+Here we see a lot of commonality.
+
+What we see here is that the skills are closely related to complexity, but they seem to use similar tools and spares.  In real world example below we see similar pattern.
+
+```{r}
+# Obfuscated real world example here.
+```
+
+
+This means that in some cases where we have limited personnel, we might have another support level where the tools and spares already exist, all that is lacking is getting the competencies across. For this a training and development plan can help.  The cluster analysis can help to identify exactly which tasks needs to be in the training and development plan.
 
 
 What we see in heatmap.  Depth A is mainly cluster 1, Depth C has heavy presence in cluster 1 and 2. Depth D is mainly cluster 3. Depth B is almost equally distributed in cluster 2 and 3. 
