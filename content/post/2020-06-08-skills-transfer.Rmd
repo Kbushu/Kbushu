@@ -18,7 +18,11 @@ The current.....
 
 ## Background
 
-Technical skills are at the cold face to sustain operations. Most support organisations face a shortage of some skills some time.  Some organisation cannot afford multiple levels of support.  When facing these situations the approach is to reduce the support levels and transferring skills to in-house capabilities. The purpose behind this can be to reduce costs and risks.
+Technical skills are at the cold face to sustain operations. 
+
+_The capabilities of support personnel is cannot repair everything and to be practical and also make economic sense we develop a support concept with multiple levels to deal with the increasing complexity the deeper the go into the equipment.  At first just replacing the battery is easy, next repairing the charger or changing he electric plug is but more tricky. Replacing the screen on the laptop is eyond most people. In the industry this also apply and met with different levels of support._
+
+Most support organizations face a shortage of some skills some time.  Some organisation cannot afford multiple levels of support.  When facing these situations the approach is to reduce the support levels and transferring skills to in-house capabilities. The purpose behind this can be to reduce costs and risks.
 
 ## Problem
 
@@ -69,7 +73,7 @@ Lets assume the current maintenance policy is based on a three level support str
 
 You cannot give somebody tools and expect them to know what to do with it, but have to teach to transfer skills. Sometimes it takes time to build up the experience.
 
-```{r}
+```{r make_sample_data}
 #Generate a task list with random complexity depth
 tasks <- 100
 task_list <- data.frame(task = paste("Task", seq.int(1,to = tasks,  by = 1)),
@@ -123,7 +127,25 @@ for (task in task_list$task) {
 #TODO: Show some sample with table
 ```
 
+
 So now we have tasks and resources linked.
+
+
+```{r explore_the_sample_data}
+# normalise the task resource list data
+tn <- left_join(x = task_list,
+                y = task_resources,
+                by = "task")
+
+# get most significant resources by type for each repair depth
+rt <- tn %>% 
+  group_by(task_depth, resource_type, resource) %>% 
+  tally() %>% 
+  top_n(n = 1,wt = n)
+```
+
+What do we use a lot at the different levels of repair
+
 
 
 ```{r}
@@ -238,7 +260,7 @@ heatmap(table(d_slct$task_depth, d_slct$resource))
 # factoextra::fviz_ca()
 # table the resources and focus on skills but show what tools needed to, what makes them close
 ```
-As expected we see skills are closely related to the complexity of the task. But, remeber these tasks are clustered together, therefore there must be some other comonality. Let's look at the parts and tools. 
+As expected we see skills are closely related to the complexity of the tasks in this cluster. But, remember these tasks are clustered together, therefore there must be some other commonality. Let's look at the parts and tools. 
 <!-- Deeper dive into the tasks and the resources that make them family.  -->
 Which parts are common
 ```{r}
