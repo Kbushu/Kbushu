@@ -1,15 +1,19 @@
 ---
-title: Skills Transfer
-author: Kobus Huisamen
-draft: TRUE
+title: "Skills Transfer"
+author: "Kobus Huisamen"
 date: '2020-06-08'
+draft: yes
 slug: skills-transfer
 categories:
-  - skills
-  - clusterering
-tags:
-  - ILS
+- skills
+- clusterering
+tags: ILS
 ---
+
+```{r}
+
+```
+
 
 # This is a sample
 
@@ -18,11 +22,18 @@ The current.....
 
 ## Background
 
-Technical skills are at the cold face to sustain operations. 
+A support concept describe the flow of activities and items. This can be from where a system is operating to where maintenance is performed and spares are located. Normally, basic maintenance happens at the organization on the system. Intermediate maintenance facilities is located close by with more skilled personnel and better equipped workshops. Anything beyond this goes to highly skilled personnel typically at manufacturers facilities.
 
-_The capabilities of support personnel is cannot repair everything and to be practical and also make economic sense we develop a support concept with multiple levels to deal with the increasing complexity the deeper the go into the equipment.  At first just replacing the battery is easy, next repairing the charger or changing he electric plug is but more tricky. Replacing the screen on the laptop is eyond most people. In the industry this also apply and met with different levels of support._
+Most support organizations face a shortage of some skills some time. Or, some organizations cannot afford multiple levels of support. When facing these situations the approach is often to reduce the support levels and build capacity in-house.
 
-Most support organizations face a shortage of some skills some time.  Some organisation cannot afford multiple levels of support.  When facing these situations the approach is to reduce the support levels and transferring skills to in-house capabilities. The purpose behind this can be to reduce costs and risks.
+<!-- TODO Edit from here -->
+To reduce the support levels and build the in-house capacity is not necessary the cheaper option. The reason for repairing equipment at other facilities is because the task is considered beyond the skill level or tools available in-house. Acquiring these specialized skills and tools is expensive.
+
+There are often tasks which use the same tools but  But there is also  What Meaning it's resources such as specialized skills and equipment that is not available in-house. It's these resources that is the distinguishing factor where the task will happen.
+
+Some In my experience there is always a degree of overlap  characteristic that If resources between the different maintenance levels are very unique then there is a The similarity 
+
+We will explore how will you go about building this in-house capacity 
 
 ## Problem
 
@@ -74,6 +85,7 @@ Lets assume the current maintenance policy is based on a three level support str
 You cannot give somebody tools and expect them to know what to do with it, but have to teach to transfer skills. Sometimes it takes time to build up the experience.
 
 ```{r make_sample_data}
+library(dplyr)
 #Generate a task list with random complexity depth
 tasks <- 100
 task_list <- data.frame(task = paste("Task", seq.int(1,to = tasks,  by = 1)),
@@ -115,21 +127,23 @@ for (task in task_list$task) {
   task_resources <- rbind(task_resources, pick_list)
   
   # pick skills
+  skills_pick <- skills_list[skills_level==ifelse(depth %in% skills_level, as.character(depth), skills_level[1])]
+  
   pick_list <- data.frame(task = task, 
-                          resource = unique(sample(x = skills_list[skills_level==depth], size = sample(1:5,3), replace = TRUE)),
+                          resource = unique(sample(x = skills_pick, size = sample(1:5,3), replace = TRUE)),
                           resource_type = 'skill')
   
   # add pick list to the data
   task_resources <- rbind(task_resources, pick_list)
   
 }
-
+head(task_resources)
+pander::pandoc.table(head(table(task_resources[,c("task","resource_type")])))
 #TODO: Show some sample with table
 ```
 
 
 So now we have tasks and resources linked.
-
 
 ```{r explore_the_sample_data}
 # normalise the task resource list data
