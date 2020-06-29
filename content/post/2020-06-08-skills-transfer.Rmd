@@ -22,9 +22,9 @@ The current.....
 
 ## Background
 
-A support concept describe the flow of activities and items. This can be from where a system is operating to where maintenance is performed and spares are located. Normally, basic maintenance happens at the organization on the system. Intermediate maintenance facilities is located close by with more skilled personnel and better equipped workshops. Anything beyond this goes to highly skilled personnel typically at manufacturers facilities.
+A support concept describe the flow of activities and items. This can be from where a system is operating to where maintenance is performed and spares are located. Normally, basic maintenance happens at the organization on the system. Intermediate maintenance is at facilities located close by with more skilled personnel and better equipped workshops. Anything beyond this goes to highly skilled personnel typically at manufacturers facilities.
 
-Most support organizations face a shortage of some skills some time. Or, some organizations cannot afford multiple levels of support. When facing these situations the approach is often to reduce the support levels and build capacity in-house.
+Some organizations cannot afford multiple levels of support, and most support organizations face a shortage of some skills some time. When facing these situations the approach is often to reduce the support levels and grow the in-house skill capacity.
 
 <!-- TODO Edit from here -->
 To reduce the support levels and build the in-house capacity is not necessary the cheaper option. The reason for repairing equipment at other facilities is because the task is considered beyond the skill level or tools available in-house. Acquiring these specialized skills and tools is expensive.
@@ -333,6 +333,10 @@ task_list$cluster <-  kmeansObj$cluster
 
 __Why is that we see some tasks have different complexity but in the same cluster?__
 Sample two tasks from same cluster, but different complexity and view difference in resources.
+
+<!-- Clusterering of tasks does not replace a LORA, CORA, these are applied and most effectively during the early life stages of the system. What we focus on here is a way for the organisation to adapt to dynamic environment during the in-service phase of the equipment. Where skills sets are people already employed and that have the potential to grow in-house capabilities, and even the tools and spares could exist too.  -->
+
+<!-- Ideas we must explore more is the fact that the dendrogram of resources, specifically parts show some parts are close in task relevancy, this is indicator to us that these parts are often used together, we can take this further and might find better efficiencies if we arrange our workshop so that these items are stored together, or handed out in kits together. Same with tool, if they not alrerady together in a toolbox. -->
 
 ```{r}
 # Use kmeansObj$centers to show distance betwwen 
