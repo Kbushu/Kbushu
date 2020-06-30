@@ -22,11 +22,17 @@ The current.....
 
 ## Background
 
-A support concept describe the flow of activities and items. This can be from where a system is operating to where maintenance is performed and spares are located. Normally, basic maintenance happens at the organization on the system. Intermediate maintenance is at facilities located close by with more skilled personnel and better equipped workshops. Anything beyond this goes to highly skilled personnel typically at manufacturers facilities.
+A support concept describe the flow of activities and items. Normally we have at least two levels of support. Starting with basic maintenance which happens at the organization on the system. Intermediate maintenance is at facilities located close by with more skilled personnel and better equipped workshops. Anything beyond this goes to highly skilled personnel typically at manufacturers facilities.
 
-Some organizations cannot afford multiple levels of support, and most support organizations face a shortage of some skills some time. When facing these situations the approach is often to reduce the support levels and grow the in-house skill capacity.
+Some organizations cannot afford multiple levels of support, and most support organizations face a shortage of some skills some time. When facing these situations the approach is often to transfer skills and grow the in-house capabilities. To do that we need to identify what is it that can be done in-house. 
 
-<!-- TODO Edit from here -->
+A well defined task will identify the skills, tools, spares, facilities and information you need to be able to carry out the task. If all these resources already exist in-house then there is a close match to where we want to be. If none of the resources exist in-house then there will be a big gap to overcome.
+
+
+<!-- TODO Edit from here
+The capability gap between maintenance levels determines the level of effort to assimilate some of the tasks done at another maintenance level. 
+
+The resources are
 To reduce the support levels and build the in-house capacity is not necessary the cheaper option. The reason for repairing equipment at other facilities is because the task is considered beyond the skill level or tools available in-house. Acquiring these specialized skills and tools is expensive.
 
 There are often tasks which use the same tools but  But there is also  What Meaning it's resources such as specialized skills and equipment that is not available in-house. It's these resources that is the distinguishing factor where the task will happen.
@@ -34,6 +40,7 @@ There are often tasks which use the same tools but  But there is also  What Mean
 Some In my experience there is always a degree of overlap  characteristic that If resources between the different maintenance levels are very unique then there is a The similarity 
 
 We will explore how will you go about building this in-house capacity 
+ -->
 
 ## Problem
 
