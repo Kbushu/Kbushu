@@ -44,6 +44,7 @@ We will explore how will you go about building this in-house capacity
 
 ## Problem
 
+Can the resources the be used to identify the support level?
 How can we identify where to start, which tasks should we train the maintainer on.
 to focus on when we can transfer (see some lessons in skill transfer from informs conference)
 
