@@ -30,6 +30,12 @@ A well defined task will identify the skills, tools, spares, facilities and info
 
 
 <!-- TODO Edit from here
+intuitively without conscious reasoning; instinctively.
+"he knows intuitively how to calm me"
+
+a methodology that can assist in skills transfer. solution  can identify similar maintenance tasks in the system that are being executed at different support levels. The idea is that if two different tasks require similar skills and tools then a maintainer with the same skills and tools in another organisation can be taught how to do the additional tasks.  The heatmap below illustrate the similarity in the group (any number of groups can be used). The algorithm use unsupervised machine learning called, K-means clustering
+
+
 The capability gap between maintenance levels determines the level of effort to assimilate some of the tasks done at another maintenance level. 
 
 The resources are
